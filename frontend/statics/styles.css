@@ -1,0 +1,15 @@
+#grafico1 {
+    display: none;
+}
+/*xdxd
+/* Estilos para el contenedor del gráfico */
+#grafico1.mostrar {
+    display: block;
+    text-align: center;
+}
+
+/* Estilos adicionales para el gráfico (ajusta según sea necesario) */
+#miGrafico {
+    width: 80%; /* Ajusta el ancho del gráfico según sea necesario */
+    margin: 0 auto; /* Centra el gráfico horizontalmente */
+}

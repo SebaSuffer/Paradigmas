@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined HTML</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ url_for('static', filename='script2.js') }}"></script>
+</head>
+
+<body>
+
+    <h1>Ciudades con más concentración de arriendos Airbnb</h1>
+
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    <button id="boton1">Mostrar Gráfico 1</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="grafico1">
+        <canvas id="miGrafico"></canvas>
+    </section>
+
+    <section id="grafico2" style="display: none;">
+        <canvas id="miGraficoBarrios"></canvas>
+    </section>
+
+    <script>
+        $(document).ready(function () {
+            //Función para obtener los datos y mostrar/ocultar el gráfico 1
+            $("#boton1").click(function () {
+                $.get("/datos", function (data) {
+                    console.log("Datos obtenidos para gráfico 1:", data);
+                    if ($("#grafico1").hasClass("mostrar")) {
+                        // Si ya se muestra, ocultarlo
+                        $("#grafico1").removeClass("mostrar");
+                        $("#botonOcultarLi").hide();
+                        $("#boton1").show();
+                    } else {
+                        // Si no se muestra, mostrarlo
+                        mostrarGrafico(data, "miGrafico");
+                        $("#grafico1").addClass("mostrar");
+                        $("#botonOcultarLi").show();
+                        $("#boton1").hide();
+                    }
+                }).fail(function () {
+                    console.error("Error al obtener los datos para gráfico 1");
+                });
+            });
+
+            // Función para obtener los datos y mostrar/ocultar el gráfico 2
+            $("#boton2").click(function () {
+                $.get("/datos-barrios", function (data) {
+                    console.log("Datos obtenidos para gráfico 2:", data);
+                    if ($("#grafico2").hasClass("mostrar")) {
+                        // Si ya se muestra, ocultarlo
+                        $("#grafico2").removeClass("mostrar");
+                        $("#boton2").show();
+                    } else {
+                        // Si no se muestra, mostrarlo
+                        mostrarGrafico(data, "miGraficoBarrios");
+                        $("#grafico2").addClass("mostrar");
+                        $("#boton2").hide();
+                    }
+                }).fail(function () {
+                    console.error("Error al obtener los datos para gráfico 2");
+                });
+            });
+
+            // Función para ocultar ambos gráficos
+            $("#botonOcultar").click(function () {
+                $("#grafico1").removeClass("mostrar");
+                $("#grafico2").removeClass("mostrar");
+                $("#boton1").show();
+                $("#boton2").show();
+                $("#botonOcultarLi").hide();
+            });
+
+            // Función para mostrar el gráfico utilizando Chart.js
+            function mostrarGrafico(datos, canvasId) {
+                console.log("Mostrar gráfico con datos:", datos);
+                var ctx = document.getElementById(canvasId).getContext("2d");
+                var myChart = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: Object.keys(datos),
+                        datasets: [
+                            {
+                                label: "Cantidad de listados",
+                                data: Object.values(datos),
+                                backgroundColor: [
+                                    "rgba(255, 99, 132, 0.2)",
+                                    "rgba(54, 162, 235, 0.2)",
+                                    "rgba(255, 206, 86, 0.2)",
+                                    "rgba(75, 192, 192, 0.2)",
+                                    "rgba(153, 102, 255, 0.2)",
+                                ],
+                                borderColor: [
+                                    "rgba(255, 99, 132, 1)",
+                                    "rgba(54, 162, 235, 1)",
+                                    "rgba(255, 206, 86, 1)",
+                                    "rgba(75, 192, 192, 1)",
+                                    "rgba(153, 102, 255, 1)",
+                                ],
+                                borderWidth: 1,
+                            },
+                        ],
+                    },
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
